@@ -1,0 +1,22 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@com_github_grpc_grpc//bazel:python_rules.bzl", "py_proto_library")
+
+package(default_visibility = ["//visibility:public"])
+
+
+proto_library(
+    name = "example_proto",
+    srcs = ["example.proto"],
+)
+
+
+py_proto_library(
+    name = "example_py_pb2",
+    deps = ["//my_package/proto:example_proto"],
+)
+
+# See: https://docs.bazel.build/versions/main/be/c-cpp.html#cc_proto_library
+cc_proto_library(
+    name = "example_cc_proto",
+    deps = ["//my_package/proto:example_proto"],
+)

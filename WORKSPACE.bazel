@@ -1,0 +1,57 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
+
+
+###
+# Pybind11
+###
+http_archive(
+  name = "pybind11_bazel",
+  strip_prefix = "pybind11_bazel-992381ced716ae12122360b0fbadbc3dda436dbf",
+  urls = ["https://github.com/pybind/pybind11_bazel/archive/992381ced716ae12122360b0fbadbc3dda436dbf.zip"],
+)
+# We still require the pybind library.
+http_archive(
+  name = "pybind11",
+  build_file = "@pybind11_bazel//:pybind11.BUILD",
+  strip_prefix = "pybind11-2.8.0",
+  urls = ["https://github.com/pybind/pybind11/archive/v2.8.0.tar.gz"],
+)
+load("@pybind11_bazel//:python_configure.bzl", "python_configure")
+python_configure(name = "local_config_python", python_version = "3")
+
+###
+# Protobuf
+###
+# proto_library, cc_proto_library, and java_proto_library rules implicitly
+# depend on @com_google_protobuf for protoc and proto runtimes.
+# This statement defines the @com_google_protobuf repo.
+git_repository(
+    name = "com_google_protobuf",
+    remote = "https://github.com/protocolbuffers/protobuf.git",
+    tag = "v3.18.1",
+    patches = ["com_google_protobuf_build.patch"],
+)
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+protobuf_deps()
+
+# GRPC v1.38, for proto rules.
+# For a related discussion of the pro/cons of various open-source py proto rule
+# repositories, see b/189457935.
+git_repository(
+    name = "com_github_grpc_grpc",
+    remote = "https://github.com/grpc/grpc.git",
+    tag = "v1.38.0",
+)
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
+grpc_deps()
+
+###
+# Pybind11 + Protobuf
+###
+git_repository(
+    name = "pybind11_protobuf",
+    commit = "f003bf2f5b44eae08fbab14861e3721a4db9d3d4", # Latest (2021-10-13)
+    remote = "https://github.com/pybind/pybind11_protobuf.git",
+)
