@@ -1,0 +1,29 @@
+load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
+
+pybind_extension(
+    name = "_my_extension",  # TODO - why underscore extension?
+    srcs = ["my_extension.cc"],
+    visibility = ["//visibility:private"],
+    deps = [
+        "//my_package/proto:example_cc_proto",
+        "@com_google_protobuf//:protobuf",
+        "@pybind11_protobuf//pybind11_protobuf:native_proto_caster",
+        "@pybind11_protobuf//pybind11_protobuf:wrapped_proto_caster",
+    ],
+)
+
+py_library(
+    name = "my_extension",
+    srcs = [
+        "__init__.py",
+    ],
+    data = [
+        "//my_package/python:_my_extension.so",
+        "@com_google_protobuf//:proto_api",
+    ],
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//my_package/proto:example_python_proto",
+    ],
+)

@@ -20,6 +20,7 @@ http_archive(
 load("@pybind11_bazel//:python_configure.bzl", "python_configure")
 python_configure(name = "local_config_python", python_version = "3")
 
+
 ###
 # Protobuf
 ###
@@ -47,6 +48,40 @@ git_repository(
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
 grpc_deps()
 
+
+
+# # GRPC v1.38, for proto rules.
+# # For a related discussion of the pro/cons of various open-source py proto rule
+# # repositories, see b/189457935.
+# git_repository(
+#     name = "com_github_grpc_grpc",
+#     remote = "https://github.com/grpc/grpc.git",
+#     tag = "v1.38.0",
+# )
+# load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
+# grpc_deps()
+
+###
+# Proto rules
+###
+http_archive(
+    name = "rules_proto_grpc",
+    urls = ["https://github.com/rules-proto-grpc/rules_proto_grpc/archive/2.0.0.tar.gz"],
+    sha256 = "d771584bbff98698e7cb3cb31c132ee206a972569f4dc8b65acbdd934d156b33",
+    strip_prefix = "rules_proto_grpc-2.0.0",
+)
+load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
+load("@rules_proto_grpc//:repositories.bzl", "rules_proto_grpc_repos", "rules_proto_grpc_toolchains")
+load("@rules_proto_grpc//python:repositories.bzl", rules_proto_grpc_python_repos = "python_repos")
+
+rules_proto_grpc_repos()
+rules_proto_grpc_toolchains()
+rules_proto_grpc_python_repos()
+
+rules_proto_dependencies()
+rules_proto_toolchains()
+
+
 ###
 # Pybind11 + Protobuf
 ###
@@ -55,3 +90,4 @@ git_repository(
     commit = "f003bf2f5b44eae08fbab14861e3721a4db9d3d4", # Latest (2021-10-13)
     remote = "https://github.com/pybind/pybind11_protobuf.git",
 )
+
