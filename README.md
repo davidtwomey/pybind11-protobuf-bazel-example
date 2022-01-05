@@ -37,6 +37,52 @@ bazel run my_package:example
 ```
 
 
+## Notes
+
+It is possible to run this **outside** of a binary (i.e. from a separate python process).
+However, this currently only seems to work if the corresponding python library has the `python` implementation of protobuf.
+
+### Working Example
+
+```shell
+# Install Protobuf (Force Python implementation)
+export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+pip install protobuf==3.19.1
+bazel build my_package:example
+```
+
+You can now import the build extension and protobuf files in a separate python process
+
+```python
+# Check protobuf implementation
+from google.protobuf.internal import api_implementation
+api_implementation.Type() # >>> Should say 'python'
+
+# Import proto + pybind11 extension
+import sys
+sys.path.append('./bazel-bin/my_package')
+from proto import example_pb2
+from pybind11 import my_extension as m
+
+msg = m.return_my_message()
+assert isinstance(msg, example_pb2.MyMessage) # >>> True
+
+m.take_my_message(msg)
+
+# ...
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
