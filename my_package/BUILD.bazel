@@ -1,28 +1,14 @@
 package(default_visibility = ["//visibility:public"])
 
-# py_library(
-#     name = "example",
-#     srcs = ["example.py"],
-#     src_version = "PY3",
-#     deps = [
-#         "//my_package/proto:example_py_pb2",
-#     ],
-#     data = [
-#         "//my_package/pybind11:my_extension.so",
-#     ]
-# )
-
-
-
 py_binary(
     name = "example",
     srcs = ["example.py"],
     python_version = "PY3",
-    visibility = ["//visibility:public"],
     deps = [
         "//my_package/proto:example_py_pb2",
     ],
     data = [
         "//my_package/pybind11:my_extension.so",
+        # "@com_google_protobuf//:proto_api", # TODO - Is this required?
     ]
 )

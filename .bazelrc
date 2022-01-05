@@ -1,1 +1,6 @@
-build --cxxopt='-std=c++17'
+# Compiler options.
+build --cxxopt=-std=c++17
+build --host_cxxopt=-std=c++17
+
+# Use fast cpp protos (TODO - Is this Working?)
+build --define use_fast_cpp_protos=true
