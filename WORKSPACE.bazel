@@ -24,6 +24,7 @@ http_archive(
 
 load("@pybind11_bazel//:python_configure.bzl", "python_configure")
 python_configure(name = "local_config_python")
+
 ###
 # Protobuf
 ###
@@ -65,6 +66,6 @@ bind(
 ###
 git_repository(
     name = "pybind11_protobuf",
-    commit = "30f02dd9ccd2fc7046c36ed913ed510fd1aa7301", # Latest (2022-01-05)
+    commit = "f20537c3285636716ed86a7ef96baa19a788c944", # Latest (2022-01-19)
     remote = "https://github.com/pybind/pybind11_protobuf.git",
 )

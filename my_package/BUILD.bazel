@@ -9,6 +9,7 @@ py_binary(
     ],
     data = [
         "//my_package/pybind11:my_extension.so",
+        "@com_google_protobuf//:protobuf_python",
         # "@com_google_protobuf//:proto_api", # TODO - Is this required?
     ]
 )
